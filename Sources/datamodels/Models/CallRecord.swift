@@ -7,12 +7,7 @@
 
 import Foundation
 
-enum UserStatus: String, Codable {
-    case online
-    case offline
-}
-
-struct CallRecord: Identifiable, Codable {
+struct CallRecord: Identifiable, Equatable, Codable {
     let id: UUID
     let participantID: UUID
     let participantAvatarURL: String?
@@ -30,5 +25,8 @@ struct CallRecord: Identifiable, Codable {
         self.duration = duration
         self.userStatus = userStatus
     }
-
+    
+    static func ==(lhs: CallRecord, rhs: CallRecord) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

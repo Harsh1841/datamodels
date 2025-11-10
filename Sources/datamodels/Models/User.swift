@@ -7,40 +7,10 @@
 
 import Foundation
 
-
-enum UserPlan: String, Codable {
-    case free
-    case premium
-    case pro
-}
-enum Gender: String, Codable {
-    case male
-    case female
-    case other
-}
-
-enum Interest: String, Codable {
-    case technology
-    case health
-    case education
-    case entertainment
-    case sports
-    case music
-    case movies
-    case travel
-    case food
-    case science
-    case art
-}
-enum EnglishLevel: String, Codable {
-    case beginner
-    case intermediate
-    case advanced
-}
-
-struct User : Identifiable, Codable {
+struct User : Identifiable, Equatable, Codable {
     let id: UUID
     var name: String
+    var age: Int?
     var gender: Gender?
     var bio: String?
     var email: String
@@ -59,9 +29,10 @@ struct User : Identifiable, Codable {
     var streak: Streak?
     // var stats: UserStats
 
-    init(name: String, email: String, currentPlan: UserPlan? = nil, calls: [CallRecord]? = nil, roleplays: [RoleplaySession]? = nil, jams: [JamSession]? = nil, createdAt: Date = Date(), lastLogin: Date? = nil, bio: String? = nil) {
+    init(name: String, email: String, age: Int? = nil, currentPlan: UserPlan? = nil, calls: [CallRecord]? = nil, roleplays: [RoleplaySession]? = nil, jams: [JamSession]? = nil, createdAt: Date = Date(), lastLogin: Date? = nil, bio: String? = nil) {
         self.id = UUID()
         self.name = name
+        self.age = age
         self.email = email
         self.currentPlan = currentPlan
         self.calls = calls
@@ -71,5 +42,8 @@ struct User : Identifiable, Codable {
         self.lastLogin = lastLogin
         self.bio = bio
     }
-
+    
+    static func ==(lhs: User, rhs: User) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

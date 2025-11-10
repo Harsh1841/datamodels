@@ -11,5 +11,9 @@ let package = Package(
         .executableTarget(
             name: "datamodels"
         ),
+        .testTarget(
+            name: "datamodelsTests",
+            dependencies: ["datamodels"]
+        ),
     ]
 )

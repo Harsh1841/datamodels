@@ -7,40 +7,7 @@
 
 import Foundation
 
-enum RoleplayCategory: String, Codable {
-    case interview
-    case groceryShopping
-    case restaurant
-    case travel
-    case custom
-}
 
-enum RoleplayStatus: String, Codable {
-    case notStarted
-    case inProgress
-    case completed
-}
-
-struct RoleplayMessage: Identifiable, Codable {
-    let id: UUID
-    let sender: String
-    let message: String
-    let timestamp: Date
-
-    init(sender: String, message: String, timestamp: Date = Date()) {
-        self.id = UUID()
-        self.sender = sender
-        self.message = message
-        self.timestamp = timestamp
-    }
-    
-}
-
-enum Difficulty: String, Codable {
-    case beginner
-    case intermediate
-    case advanced
-}
 
 struct Roleplay: Identifiable, Codable {
     let id: UUID

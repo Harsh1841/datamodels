@@ -11,5 +11,6 @@ struct datamodels {
         RoleplayRepository.shared.createRoleplay(Roleplay(title: "Restaurant", category: .restaurant, predefinedScript: []))
         RoleplayRepository.shared.createRoleplay(Roleplay(title: "Travel", category: .travel, predefinedScript: []))
         RoleplayRepository.shared.createRoleplay(Roleplay(title: "Custom Roleplay", category: .custom, predefinedScript: []))
+        print("Hello, World!")
     }
 }

@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct RoleplaySession: Identifiable, Codable {
+struct RoleplaySession: Identifiable, Equatable, Codable {
     let id: UUID
     var title: String              
     var category: RoleplayCategory
@@ -30,5 +30,9 @@ struct RoleplaySession: Identifiable, Codable {
         self.userMessages = userMessages
         self.status = status
         self.createdAt = createdAt
+    }
+    
+    static func ==(lhs: RoleplaySession, rhs: RoleplaySession) -> Bool {
+        return lhs.id == rhs.id
     }
 }

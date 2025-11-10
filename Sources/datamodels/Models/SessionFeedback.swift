@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct SessionFeedback: Identifiable, Codable {
+struct SessionFeedback: Identifiable, Equatable, Codable {
     let id: String
     let sessionId: String
 
@@ -18,4 +18,8 @@ struct SessionFeedback: Identifiable, Codable {
 
     let summary: String
     let createdAt: Date
+    
+    static func ==(lhs: SessionFeedback, rhs: SessionFeedback) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

@@ -7,13 +7,8 @@
 
 import Foundation
 
-enum JamPhase: String, Codable {
-    case preparing
-    case speaking
-    case completed
-}
 
-struct JamSession: Identifiable, Codable {
+struct JamSession: Identifiable, Equatable, Codable {
     private var topics: [String] = [
         "The Future of Technology",
         "Climate Change and Its Impact",
@@ -46,5 +41,9 @@ struct JamSession: Identifiable, Codable {
         self.endedAt = endedAt
         self.transcript = transcript
         self.feedback = feedback
+    }
+    
+    static func ==(lhs: JamSession, rhs: JamSession) -> Bool {
+        return lhs.id == rhs.id
     }
 }

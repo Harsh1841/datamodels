@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct CallSession: Identifiable, Codable {
+struct CallSession: Identifiable, Equatable, Codable {
     let id: UUID
     let participantOneID: UUID
     let participantTwoID: UUID
@@ -28,5 +28,9 @@ struct CallSession: Identifiable, Codable {
         self.endedAt = endedAt
         self.feedback = feedback
         self.suggestedQuestions = nil
+    }
+    
+    static func ==(lhs: CallSession, rhs: CallSession) -> Bool {
+        return lhs.id == rhs.id
     }
 }
