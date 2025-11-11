@@ -73,7 +73,7 @@ class JamSessionDataModel {
     private func saveJamSessions() {
         let propertyListEncoder = PropertyListEncoder()
         let codedJamSessions = try? propertyListEncoder.encode(jamSessions)
-        try? codedJamSessions?.write(to: archiveURL, options: .noFileProtection)
+        try? codedJamSessions?.write(to: archiveURL)
     }
     
     private func loadSampleJamSessions() -> [JamSession] {

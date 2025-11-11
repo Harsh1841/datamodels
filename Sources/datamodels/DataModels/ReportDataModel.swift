@@ -81,7 +81,7 @@ class ReportDataModel {
     private func saveReports() {
         let propertyListEncoder = PropertyListEncoder()
         let codedReports = try? propertyListEncoder.encode(reports)
-        try? codedReports?.write(to: archiveURL, options: .noFileProtection)
+        try? codedReports?.write(to: archiveURL)
     }
     
     private func loadSampleReports() -> [Report] {

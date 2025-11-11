@@ -30,3 +30,4 @@ struct CallRecord: Identifiable, Equatable, Codable {
         return lhs.id == rhs.id
     }
 }
+ 

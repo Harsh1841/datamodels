@@ -73,7 +73,7 @@ class RoleplaySessionDataModel {
     private func saveRoleplaySessions() {
         let propertyListEncoder = PropertyListEncoder()
         let codedRoleplaySessions = try? propertyListEncoder.encode(roleplaySessions)
-        try? codedRoleplaySessions?.write(to: archiveURL, options: .noFileProtection)
+        try? codedRoleplaySessions?.write(to: archiveURL)
     }
     
     private func loadSampleRoleplaySessions() -> [RoleplaySession] {

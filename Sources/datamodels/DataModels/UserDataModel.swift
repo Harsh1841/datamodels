@@ -138,7 +138,7 @@ class UserDataModel {
     private func saveUsers() {
         let propertyListEncoder = PropertyListEncoder()
         let codedUsers = try? propertyListEncoder.encode(users)
-        try? codedUsers?.write(to: archiveURL, options: .noFileProtection)
+        try? codedUsers?.write(to: archiveURL)
     }
     
     private func loadSampleUsers() -> [User] {

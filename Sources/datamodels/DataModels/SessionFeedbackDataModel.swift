@@ -40,6 +40,7 @@ class SessionFeedbackDataModel {
         }
     }
     
+
     func deleteSessionFeedback(at index: Int) {
         sessionFeedbacks.remove(at: index)
         saveSessionFeedbacks()
@@ -77,7 +78,7 @@ class SessionFeedbackDataModel {
     private func saveSessionFeedbacks() {
         let propertyListEncoder = PropertyListEncoder()
         let codedSessionFeedbacks = try? propertyListEncoder.encode(sessionFeedbacks)
-        try? codedSessionFeedbacks?.write(to: archiveURL, options: .noFileProtection)
+        try? codedSessionFeedbacks?.write(to: archiveURL)
     }
     
     private func loadSampleSessionFeedbacks() -> [SessionFeedback] {

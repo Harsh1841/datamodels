@@ -77,7 +77,7 @@ class HistoryDataModel {
     private func saveHistory() {
         let propertyListEncoder = PropertyListEncoder()
         let codedActivities = try? propertyListEncoder.encode(activities)
-        try? codedActivities?.write(to: archiveURL, options: .noFileProtection)
+        try? codedActivities?.write(to: archiveURL)
     }
     
     private func loadSampleActivities() -> [Activity] {

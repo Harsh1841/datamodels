@@ -73,7 +73,7 @@ class CallRecordDataModel {
     private func saveCallRecords() {
         let propertyListEncoder = PropertyListEncoder()
         let codedCallRecords = try? propertyListEncoder.encode(callRecords)
-        try? codedCallRecords?.write(to: archiveURL, options: .noFileProtection)
+        try? codedCallRecords?.write(to: archiveURL)
     }
     
     private func loadSampleCallRecords() -> [CallRecord] {

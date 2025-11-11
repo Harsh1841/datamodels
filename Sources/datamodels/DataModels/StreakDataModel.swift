@@ -83,7 +83,7 @@ class StreakDataModel {
         guard let streak = streak else { return }
         let propertyListEncoder = PropertyListEncoder()
         let codedStreak = try? propertyListEncoder.encode(streak)
-        try? codedStreak?.write(to: archiveURL, options: .noFileProtection)
+        try? codedStreak?.write(to: archiveURL)
     }
     
     private func loadSampleStreak() -> Streak {

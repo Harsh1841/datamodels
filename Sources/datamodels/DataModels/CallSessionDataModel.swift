@@ -80,7 +80,7 @@ class CallSessionDataModel {
     private func saveCallSessions() {
         let propertyListEncoder = PropertyListEncoder()
         let codedCallSessions = try? propertyListEncoder.encode(callSessions)
-        try? codedCallSessions?.write(to: archiveURL, options: .noFileProtection)
+        try? codedCallSessions?.write(to: archiveURL)
     }
     
     private func loadSampleCallSessions() -> [CallSession] {

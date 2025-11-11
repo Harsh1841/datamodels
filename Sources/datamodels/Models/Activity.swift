@@ -17,3 +17,4 @@ struct Activity: Equatable, Codable {
     }
 }
 
+
