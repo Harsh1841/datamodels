@@ -16,6 +16,7 @@ struct RoleplaySession: Identifiable, Equatable, Codable {
     var status: RoleplayStatus
     var createdAt: Date
 
+    // TODO add ending feature 
     init(title: String,
          category: RoleplayCategory,
          predefinedScript: [String],
