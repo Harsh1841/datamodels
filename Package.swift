@@ -5,7 +5,7 @@ import PackageDescription
 let package = Package(
     name: "datamodels",
     platforms: [
-        .macOS(.v13) // WhisperKit requires macOS 13+
+        .macOS(.v13)
     ],
     dependencies: [
         .package(url: "https://github.com/argmaxinc/WhisperKit", from: "0.5.0")

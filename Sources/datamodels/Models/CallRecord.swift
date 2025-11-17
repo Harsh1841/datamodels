@@ -9,6 +9,7 @@ import Foundation
 
 struct CallRecord: Identifiable, Equatable, Codable {
     let id: UUID
+    let callSessionID : UUID? = nil
     let participantID: UUID
     let participantAvatarURL: String?
     let participantBio: String?
@@ -24,6 +25,7 @@ struct CallRecord: Identifiable, Equatable, Codable {
         self.callDate = callDate
         self.duration = duration
         self.userStatus = userStatus
+    
     }
     
     static func ==(lhs: CallRecord, rhs: CallRecord) -> Bool {

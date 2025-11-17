@@ -22,7 +22,7 @@ class StreakDataModel {
         loadStreak()
     }
     
-    // MARK: - Public Methods
+
     
     func getStreak() -> Streak? {
         return streak
@@ -63,7 +63,7 @@ class StreakDataModel {
         try? FileManager.default.removeItem(at: archiveURL)
     }
     
-    // MARK: - Private Methods
+
     
     private func loadStreak() {
         if let savedStreak = loadStreakFromDisk() {

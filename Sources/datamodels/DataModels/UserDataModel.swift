@@ -23,7 +23,6 @@ class UserDataModel {
         loadUsers()
     }
     
-    // MARK: - Public Methods
     
     func getAllUsers() -> [User] {
         return users
@@ -81,7 +80,7 @@ class UserDataModel {
         }
     }
     
-    // MARK: - Matching Methods (for 1-to-1 call feature)
+
     
     func findMatchingUsers(for user: User, basedOn interests: [Interest]? = nil, gender: Gender? = nil, ageRange: ClosedRange<Int>? = nil, englishLevel: EnglishLevel? = nil) -> [User] {
         return users.filter { potentialMatch in

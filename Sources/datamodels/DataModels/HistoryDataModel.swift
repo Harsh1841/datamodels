@@ -22,7 +22,7 @@ class HistoryDataModel {
         loadHistory()
     }
     
-    // MARK: - Public Methods
+
     
     func getAllActivities() -> [Activity] {
         return activities
@@ -58,7 +58,7 @@ class HistoryDataModel {
         return activities.filter { $0.type == type }
     }
     
-    // MARK: - Private Methods
+   
     
     private func loadHistory() {
         if let savedActivities = loadHistoryFromDisk() {

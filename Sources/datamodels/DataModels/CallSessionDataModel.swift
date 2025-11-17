@@ -13,6 +13,7 @@ class CallSessionDataModel {
     static let shared = CallSessionDataModel()
     
     private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    
     private let archiveURL: URL
     
     private var callSessions: [CallSession] = []
@@ -22,37 +23,31 @@ class CallSessionDataModel {
         loadCallSessions()
     }
     
-    // MARK: - Public Methods
-    
-    func getAllCallSessions() -> [CallSession] {
-        return callSessions
+    /*
+        Find a match for the current user, based on the interests, gender and english level
+        Parameters: CallSession object for interets, gender and english level
+        Return:
+            Returns UUID of matched peer, nil in case of no match found
+    */
+    func findMatch(callSession: CallSession) -> UUID? {
+        // get all online users near the current user
+        // filter users based on these 3 things
+        // return user id if found, otherwise nil
+        return nil
     }
     
-    func addCallSession(_ callSession: CallSession) {
-        callSessions.append(callSession)
-        saveCallSessions()
-    }
     
-    func updateCallSession(_ callSession: CallSession) {
-        if let index = callSessions.firstIndex(where: { $0.id == callSession.id }) {
-            callSessions[index] = callSession
-            saveCallSessions()
-        }
-    }
-    
-    func deleteCallSession(at index: Int) {
-        callSessions.remove(at: index)
-        saveCallSessions()
-    }
-    
-    func deleteCallSession(by id: UUID) {
-        callSessions.removeAll(where: { $0.id == id })
-        saveCallSessions()
+    func getParticipantDetails(participantID: UUID){
+            // get participant bio
+            // get participant name
+            // get participant image
+            // get shared interests
     }
     
     func getCallSession(by id: UUID) -> CallSession? {
         return callSessions.first(where: { $0.id == id })
     }
+
     
     func addSuggestedQuestions(to sessionID: UUID, questions: [String]) {
         if let index = callSessions.firstIndex(where: { $0.id == sessionID }) {
@@ -61,7 +56,7 @@ class CallSessionDataModel {
         }
     }
     
-    // MARK: - Private Methods
+
     
     private func loadCallSessions() {
         if let savedCallSessions = loadCallSessionsFromDisk() {

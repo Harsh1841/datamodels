@@ -22,7 +22,7 @@ class ReportDataModel {
         loadReports()
     }
     
-    // MARK: - Public Methods
+
     
     func getAllReports() -> [Report] {
         return reports
@@ -62,7 +62,7 @@ class ReportDataModel {
         return reports.filter { $0.reportedEntityID == reportedEntityID }
     }
     
-    // MARK: - Private Methods
+
     
     private func loadReports() {
         if let savedReports = loadReportsFromDisk() {

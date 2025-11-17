@@ -22,7 +22,7 @@ class RoleplaySessionDataModel {
         loadRoleplaySessions()
     }
     
-    // MARK: - Public Methods
+
     
     func getAllRoleplaySessions() -> [RoleplaySession] {
         return roleplaySessions
@@ -54,7 +54,7 @@ class RoleplaySessionDataModel {
         return roleplaySessions.first(where: { $0.id == id })
     }
     
-    // MARK: - Private Methods
+ 
     
     private func loadRoleplaySessions() {
         if let savedRoleplaySessions = loadRoleplaySessionsFromDisk() {

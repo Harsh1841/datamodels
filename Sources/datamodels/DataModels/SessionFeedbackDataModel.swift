@@ -22,7 +22,7 @@ class SessionFeedbackDataModel {
         loadSessionFeedbacks()
     }
     
-    // MARK: - Public Methods
+ 
     
     func getAllSessionFeedbacks() -> [SessionFeedback] {
         return sessionFeedbacks
@@ -59,8 +59,7 @@ class SessionFeedbackDataModel {
         return sessionFeedbacks.filter { $0.sessionId == sessionId }
     }
     
-    // MARK: - Private Methods
-    
+
     private func loadSessionFeedbacks() {
         if let savedSessionFeedbacks = loadSessionFeedbacksFromDisk() {
             sessionFeedbacks = savedSessionFeedbacks
