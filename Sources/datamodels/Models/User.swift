@@ -1,49 +1,65 @@
-//
-//  User.swift
-//  StoryboardsExample
-//
-//  Created by Harshdeep Singh on 05/11/25.
-//
-
 import Foundation
 
-struct User : Identifiable, Equatable, Codable {
+struct User: Identifiable, Codable, Equatable {
+
     let id: UUID
     var name: String
+    var email: String
+    var avatar: String?
     var age: Int?
     var gender: Gender?
     var bio: String?
-    var email: String
-    var currentPlan: UserPlan?
     var englishLevel: EnglishLevel?
-    var calls: [CallRecord]?
-    var friends: [User]?
-    var roleplays: [RoleplaySession]?
-    var jams: [JamSession]?
-    var avatar: String?
-    var createdAt: Date
-    var lastLogin: Date?
     var interests: [Interest]?
-
-    // // Relationships
+    var currentPlan: UserPlan?
     var streak: Streak?
-    // var stats: UserStats
+    var lastSeen: Date?
+    var callRecordIDs: [UUID]
+    var roleplayIDs: [UUID]
+    var jamSessionIDs: [UUID]
+    var friendsIDs: [UUID]
 
-    init(name: String, email: String, age: Int? = nil, currentPlan: UserPlan? = nil, calls: [CallRecord]? = nil, roleplays: [RoleplaySession]? = nil, jams: [JamSession]? = nil, createdAt: Date = Date(), lastLogin: Date? = nil, bio: String? = nil) {
+    init(
+        name: String,
+        email: String,
+        age: Int? = nil,
+        gender: Gender? = nil,
+        bio: String? = nil,
+        englishLevel: EnglishLevel? = nil,
+        interests: [Interest]? = nil,
+        currentPlan: UserPlan? = nil,
+        avatar: String? = nil,
+        streak: Streak? = nil,
+        lastSeen: Date? = nil,
+        callRecordIDs: [UUID] = [],
+        roleplayIDs: [UUID] = [],
+        jamSessionIDs: [UUID] = [],
+        friends: [UUID] = [],
+    ) {
         self.id = UUID()
         self.name = name
-        self.age = age
         self.email = email
-        self.currentPlan = currentPlan
-        self.calls = calls
-        self.roleplays = roleplays
-        self.jams = jams
-        self.createdAt = createdAt
-        self.lastLogin = lastLogin
+        self.age = age
+        self.gender = gender
         self.bio = bio
+        self.englishLevel = englishLevel
+        self.interests = interests
+        self.currentPlan = currentPlan
+        self.avatar = avatar
+        self.streak = streak
+        self.lastSeen = lastSeen
+        self.callRecordIDs = callRecordIDs
+        self.roleplayIDs = roleplayIDs
+        self.jamSessionIDs = jamSessionIDs
+        self.friendsIDs = friends
     }
-    
-    static func ==(lhs: User, rhs: User) -> Bool {
-        return lhs.id == rhs.id
+
+    static func == (lhs: User, rhs: User) -> Bool {
+        lhs.id == rhs.id
+    }
+
+     var isOnline: Bool {
+        guard let last = lastSeen else { return false }
+        return Date().timeIntervalSince(last) < 60
     }
 }

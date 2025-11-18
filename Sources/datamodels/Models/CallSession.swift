@@ -1,39 +1,31 @@
-//
-//  CallSession.swift
-//  StoryboardsExample
-//
-//  Created by Harshdeep Singh on 05/11/25.
-
-
 import Foundation
 
-struct CallSession: Identifiable, Equatable, Codable {
+struct CallSession: Identifiable, Codable {
     let id: UUID
-    // current user
     let participantOneID: UUID
-    let participantTwoID: UUID?
-    var suggestedQuestions: [String]? = nil
-    var isConnected: Bool = false
-    var interests: [Interest] = []
-    var gender: Gender  = .any
-    var englishLevel : EnglishLevel = .beginner
-    var startedAt: Date
+    var participantTwoID: UUID?
+    var interests: [Interest]
+    var gender: Gender
+    var englishLevel: EnglishLevel
+    var isConnected: Bool
+    let startedAt: Date
     var endedAt: Date?
-    var feedback: SessionFeedback?
-    init(participantOneID: UUID, participantTwoID: UUID, user: User, startedAt: Date = Date(), endedAt: Date? = nil, feedback: SessionFeedback? = nil, interests: [Interest], gender: Gender, englishLevel: EnglishLevel) {
+
+    init(
+        participantOneID: UUID,
+        interests: [Interest],
+        gender: Gender,
+        englishLevel: EnglishLevel,
+        startedAt: Date = Date()
+    ) {
         self.id = UUID()
         self.participantOneID = participantOneID
-        self.participantTwoID = participantTwoID
-        self.startedAt = startedAt
-        self.endedAt = endedAt
-        self.feedback = feedback
-        self.suggestedQuestions = nil
+        self.participantTwoID = nil  // match not found yet
         self.interests = interests
         self.gender = gender
         self.englishLevel = englishLevel
-    }
-    
-    static func ==(lhs: CallSession, rhs: CallSession) -> Bool {
-        return lhs.id == rhs.id
+        self.isConnected = false
+        self.startedAt = startedAt
+        self.endedAt = nil
     }
 }

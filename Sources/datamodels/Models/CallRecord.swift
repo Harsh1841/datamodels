@@ -1,35 +1,34 @@
-//
-//  CallSession.swift
-//  StoryboardsExample
-//
-//  Created by Harshdeep Singh on 05/11/25.
-//
-
 import Foundation
 
-struct CallRecord: Identifiable, Equatable, Codable {
+struct CallRecord: Identifiable, Codable {
     let id: UUID
-    let callSessionID : UUID? = nil
     let participantID: UUID
+    let participantName: String?
     let participantAvatarURL: String?
     let participantBio: String?
+    let participantInterests: [Interest]?
     let callDate: Date
     let duration: TimeInterval
     let userStatus: UserStatus
 
-    init(participantID: UUID, participantAvatarURL: String? = nil, participantBio: String? = nil, callDate: Date, duration: TimeInterval, userStatus: UserStatus) {
+    init(
+        participantID: UUID,
+        participantName: String?,
+        participantAvatarURL: String?,
+        participantBio: String?,
+        participantInterests: [Interest]?,
+        callDate: Date,
+        duration: TimeInterval,
+        userStatus: UserStatus
+    ) {
         self.id = UUID()
         self.participantID = participantID
+        self.participantName = participantName
         self.participantAvatarURL = participantAvatarURL
         self.participantBio = participantBio
+        self.participantInterests = participantInterests
         self.callDate = callDate
         self.duration = duration
         self.userStatus = userStatus
-    
-    }
-    
-    static func ==(lhs: CallRecord, rhs: CallRecord) -> Bool {
-        return lhs.id == rhs.id
     }
 }
- 

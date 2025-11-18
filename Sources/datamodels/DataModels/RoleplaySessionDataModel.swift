@@ -1,107 +1,70 @@
-//
-//  RoleplaySessionDataModel.swift
-//  StoryboardsExample
-//
-//  Created by Harshdeep Singh on 05/11/25.
-//
-
 import Foundation
 
 @MainActor
 class RoleplaySessionDataModel {
-    
-    static let shared = RoleplaySessionDataModel()
-    
-    private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    private let archiveURL: URL
-    
-    private var roleplaySessions: [RoleplaySession] = []
-    
-    private init() {
-        archiveURL = documentsDirectory.appendingPathComponent("roleplaySessions").appendingPathExtension("plist")
-        loadRoleplaySessions()
-    }
-    
 
-    
-    func getAllRoleplaySessions() -> [RoleplaySession] {
-        return roleplaySessions
+    static let shared = RoleplaySessionDataModel()
+
+    private let documentsDirectory = FileManager.default.urls(
+        for: .documentDirectory,
+        in: .userDomainMask
+    ).first!
+
+    private let archiveURL: URL
+
+    private var sessions: [RoleplaySession] = []
+
+    private init() {
+        archiveURL =
+            documentsDirectory
+            .appendingPathComponent("roleplaySessions")
+            .appendingPathExtension("plist")
+
+        loadSessions()
     }
-    
-    func addRoleplaySession(_ roleplaySession: RoleplaySession) {
-        roleplaySessions.append(roleplaySession)
-        saveRoleplaySessions()
+
+    func getAllSessions() -> [RoleplaySession] {
+        sessions
     }
-    
-    func updateRoleplaySession(_ roleplaySession: RoleplaySession) {
-        if let index = roleplaySessions.firstIndex(where: { $0.id == roleplaySession.id }) {
-            roleplaySessions[index] = roleplaySession
-            saveRoleplaySessions()
+
+    func getSessions(for userId: UUID) -> [RoleplaySession] {
+        sessions.filter { $0.userId == userId }
+    }
+
+    func addSession(_ session: RoleplaySession) {
+        sessions.append(session)
+        saveSessions()
+    }
+
+    func updateSession(_ session: RoleplaySession) {
+        if let index: Array<RoleplaySession>.Index = sessions.firstIndex(where: { $0.id == session.id }) {
+            sessions[index] = session
+            saveSessions()
         }
     }
-    
-    func deleteRoleplaySession(at index: Int) {
-        roleplaySessions.remove(at: index)
-        saveRoleplaySessions()
+
+    func deleteSession(by id: UUID) {
+        sessions.removeAll { $0.id == id }
+        saveSessions()
     }
-    
-    func deleteRoleplaySession(by id: UUID) {
-        roleplaySessions.removeAll(where: { $0.id == id })
-        saveRoleplaySessions()
+
+    func getSession(by id: UUID) -> RoleplaySession? {
+        sessions.first { $0.id == id }
     }
-    
-    func getRoleplaySession(by id: UUID) -> RoleplaySession? {
-        return roleplaySessions.first(where: { $0.id == id })
-    }
-    
- 
-    
-    private func loadRoleplaySessions() {
-        if let savedRoleplaySessions = loadRoleplaySessionsFromDisk() {
-            roleplaySessions = savedRoleplaySessions
+
+    private func loadSessions() {
+        if let data: Data = try? Data(contentsOf: archiveURL) {
+            let decoder: PropertyListDecoder = PropertyListDecoder()
+            sessions = (try? decoder.decode([RoleplaySession].self, from: data)) ?? []
         } else {
-            roleplaySessions = loadSampleRoleplaySessions()
+            sessions = []
         }
     }
-    
-    private func loadRoleplaySessionsFromDisk() -> [RoleplaySession]? {
-        guard let codedRoleplaySessions = try? Data(contentsOf: archiveURL) else { return nil }
-        let propertyListDecoder = PropertyListDecoder()
-        return try? propertyListDecoder.decode([RoleplaySession].self, from: codedRoleplaySessions)
-    }
-    
-    private func saveRoleplaySessions() {
-        let propertyListEncoder = PropertyListEncoder()
-        let codedRoleplaySessions = try? propertyListEncoder.encode(roleplaySessions)
-        try? codedRoleplaySessions?.write(to: archiveURL)
-    }
-    
-    private func loadSampleRoleplaySessions() -> [RoleplaySession] {
-        let session1 = RoleplaySession(
-            title: "Grocery Shopping",
-            category: .groceryShopping,
-            predefinedScript: ["Hello, I'd like to buy some apples.", "How much do they cost?"],
-            userMessages: [],
-            status: .notStarted
-        )
-        
-        let session2 = RoleplaySession(
-            title: "Job Interview",
-            category: .interview,
-            predefinedScript: ["Tell me about yourself.", "What are your strengths?"],
-            userMessages: [],
-            status: .notStarted
-        )
-        
-        let session3 = RoleplaySession(
-            title: "Restaurant Order",
-            category: .restaurant,
-            predefinedScript: ["I'd like to order a pizza.", "What toppings do you have?"],
-            userMessages: [],
-            status: .notStarted
-        )
-        
-        return [session1, session2, session3]
+
+    private func saveSessions() {
+        let encoder: PropertyListEncoder = PropertyListEncoder()
+        if let data: Data = try? encoder.encode(sessions) {
+            try? data.write(to: archiveURL)
+        }
     }
 }
-

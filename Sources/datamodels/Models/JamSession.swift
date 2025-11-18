@@ -1,24 +1,17 @@
-//
-//  JamSession.swift
-//  StoryboardsExample
-//
-//  Created by Harshdeep Singh on 05/11/25.
-//
-
 import Foundation
 
+struct JamSession: Identifiable, Codable, Equatable {
 
-struct JamSession: Identifiable, Equatable, Codable {
-    private var topics: [String] = [
+    static let availableTopics: [String] = [
         "The Future of Technology",
         "Climate Change and Its Impact",
         "The Role of Art in Society",
         "Exploring Space: The Next Frontier",
-        "The Evolution of Education"
-    ]   
+        "The Evolution of Education",
+    ]
 
     let id: UUID
-    let userId: String
+    let userId: UUID
 
     let topic: String
     var phase: JamPhase
@@ -27,23 +20,34 @@ struct JamSession: Identifiable, Equatable, Codable {
     var startedSpeakingAt: Date?
     var endedAt: Date?
 
-    var transcript: String?     
+    var transcript: String?
     var feedback: SessionFeedback?
 
-    
-    init(userId: String, phase: JamPhase, startedPrepAt: Date? = nil, startedSpeakingAt: Date? = nil, endedAt: Date? = nil, transcript: String? = nil, feedback: SessionFeedback? = nil) {
+    var suggestions : [String]
+
+    init(
+        userId: UUID,
+        phase: JamPhase,
+        startedPrepAt: Date? = nil,
+        startedSpeakingAt: Date? = nil,
+        endedAt: Date? = nil,
+        transcript: String? = nil,
+        feedback: SessionFeedback? = nil,
+        suggestions: [String] = []
+    ) {
         self.id = UUID()
         self.userId = userId
-        self.topic = topics.randomElement() ?? "General Topic"
+        self.topic = Self.availableTopics.randomElement() ?? "General Topic"
         self.phase = phase
         self.startedPrepAt = startedPrepAt
         self.startedSpeakingAt = startedSpeakingAt
         self.endedAt = endedAt
         self.transcript = transcript
         self.feedback = feedback
+        self.suggestions = suggestions
     }
-    
-    static func ==(lhs: JamSession, rhs: JamSession) -> Bool {
-        return lhs.id == rhs.id
+
+    static func == (lhs: JamSession, rhs: JamSession) -> Bool {
+        lhs.id == rhs.id
     }
 }

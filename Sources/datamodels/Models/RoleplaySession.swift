@@ -1,39 +1,38 @@
-//
-//  RoleplaySession.swift
-//  StoryboardsExample
-//
-//  Created by Harshdeep Singh on 05/11/25.
-//
-
 import Foundation
 
-struct RoleplaySession: Identifiable, Equatable, Codable {
+struct RoleplaySession: Identifiable, Codable, Equatable {
+
     let id: UUID
-    var title: String              
-    var category: RoleplayCategory
-    var predefinedScript: [String]
-    var userMessages: [RoleplayMessage]
+
+    let userId: UUID
+    let scenarioId: UUID
+
+    var currentLineIndex: Int
+    var messages: [RoleplayMessage]
+
     var status: RoleplayStatus
-    var createdAt: Date
+    let startedAt: Date
+    var endedAt: Date?
+    var feedback: SessionFeedback?
 
-    // TODO add ending feature 
-    init(title: String,
-         category: RoleplayCategory,
-         predefinedScript: [String],
-         userMessages: [RoleplayMessage] = [],
-         status: RoleplayStatus = .notStarted,
-         createdAt: Date = Date()) {
-
+    init(
+        userId: UUID,
+        scenarioId: UUID,
+        status: RoleplayStatus = .notStarted,
+        startedAt: Date = Date()
+    ) {
         self.id = UUID()
-        self.title = title
-        self.category = category
-        self.predefinedScript = predefinedScript
-        self.userMessages = userMessages
+        self.userId = userId
+        self.scenarioId = scenarioId
         self.status = status
-        self.createdAt = createdAt
+        self.startedAt = startedAt
+        self.endedAt = nil
+        self.feedback = nil
+        self.currentLineIndex = 0
+        self.messages = []
     }
-    
-    static func ==(lhs: RoleplaySession, rhs: RoleplaySession) -> Bool {
-        return lhs.id == rhs.id
+
+    static func == (lhs: RoleplaySession, rhs: RoleplaySession) -> Bool {
+        lhs.id == rhs.id
     }
 }

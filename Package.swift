@@ -7,15 +7,15 @@ let package = Package(
     platforms: [
         .macOS(.v13)
     ],
-    dependencies: [
-        .package(url: "https://github.com/argmaxinc/WhisperKit", from: "0.5.0")
-    ],
+    // dependencies: [
+    //     .package(url: "https://github.com/argmaxinc/WhisperKit", from: "0.5.0")
+    // ],
     targets: [
         .executableTarget(
             name: "datamodels",
-            dependencies: [
-                .product(name: "WhisperKit", package: "WhisperKit")
-            ],
+            // dependencies: [
+            //     .product(name: "WhisperKit", package: "WhisperKit")
+            // ],
             linkerSettings: [
                 .linkedFramework("Speech")
             ]

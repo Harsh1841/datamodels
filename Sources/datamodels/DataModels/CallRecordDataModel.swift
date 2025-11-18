@@ -1,84 +1,59 @@
-//
-//  CallRecordDataModel.swift
-//  StoryboardsExample
-//
-//  Created by Harshdeep Singh on 05/11/25.
-//
-
 import Foundation
 
 @MainActor
 class CallRecordDataModel {
-    
-    static let shared = CallRecordDataModel()
-    
-    private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+
+    static let shared: CallRecordDataModel = CallRecordDataModel()
+
+    private let documentsDirectory = FileManager.default.urls(
+        for: .documentDirectory,
+        in: .userDomainMask
+    ).first!
+
     private let archiveURL: URL
-    
+
     private var callRecords: [CallRecord] = []
-    
+
     private init() {
-        archiveURL = documentsDirectory.appendingPathComponent("callRecords").appendingPathExtension("plist")
+        archiveURL =
+            documentsDirectory
+            .appendingPathComponent("callRecords")
+            .appendingPathExtension("plist")
+
         loadCallRecords()
     }
-    
-    // MARK: - Public Methods
-    
+
     func getAllCallRecords() -> [CallRecord] {
         return callRecords
     }
-    
-    func addCallRecord(_ callRecord: CallRecord) {
-        callRecords.append(callRecord)
+
+    func addCallRecord(_ record: CallRecord) {
+        callRecords.append(record)
         saveCallRecords()
     }
-    
-    func updateCallRecord(_ callRecord: CallRecord) {
-        if let index = callRecords.firstIndex(where: { $0.id == callRecord.id }) {
-            callRecords[index] = callRecord
-            saveCallRecords()
-        }
-    }
-    
-    func deleteCallRecord(at index: Int) {
-        callRecords.remove(at: index)
-        saveCallRecords()
-    }
-    
+
     func deleteCallRecord(by id: UUID) {
-        callRecords.removeAll(where: { $0.id == id })
+        callRecords.removeAll { $0.id == id }
         saveCallRecords()
     }
-    
+
     func getCallRecord(by id: UUID) -> CallRecord? {
-        return callRecords.first(where: { $0.id == id })
+        return callRecords.first { $0.id == id }
     }
-    
-    // MARK: - Private Methods
-    
+
     private func loadCallRecords() {
-        if let savedCallRecords = loadCallRecordsFromDisk() {
-            callRecords = savedCallRecords
+        if let saved = try? Data(contentsOf: archiveURL) {
+            let decoder = PropertyListDecoder()
+            callRecords = (try? decoder.decode([CallRecord].self, from: saved)) ?? []
         } else {
-            callRecords = loadSampleCallRecords()
+            callRecords = []
         }
     }
-    
-    private func loadCallRecordsFromDisk() -> [CallRecord]? {
-        guard let codedCallRecords = try? Data(contentsOf: archiveURL) else { return nil }
-        let propertyListDecoder = PropertyListDecoder()
-        return try? propertyListDecoder.decode([CallRecord].self, from: codedCallRecords)
-    }
-    
+
     private func saveCallRecords() {
-        let propertyListEncoder = PropertyListEncoder()
-        let codedCallRecords = try? propertyListEncoder.encode(callRecords)
-        try? codedCallRecords?.write(to: archiveURL)
-    }
-    
-    private func loadSampleCallRecords() -> [CallRecord] {
-        // Return empty array as sample - call records require actual call data
-        return []
+        let encoder = PropertyListEncoder()
+        if let data = try? encoder.encode(callRecords) {
+            try? data.write(to: archiveURL)
+        }
     }
 }
-

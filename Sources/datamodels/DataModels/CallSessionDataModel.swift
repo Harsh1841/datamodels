@@ -1,86 +1,135 @@
-//
-//  CallSessionDataModel.swift
-//  StoryboardsExample
-//
-//  Created by Harshdeep Singh on 05/11/25.
-//
-
 import Foundation
 
 @MainActor
 class CallSessionDataModel {
-    
+
     static let shared = CallSessionDataModel()
-    
-    private let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-    
-    private let archiveURL: URL
-    
-    private var callSessions: [CallSession] = []
-    
-    private init() {
-        archiveURL = documentsDirectory.appendingPathComponent("callSessions").appendingPathExtension("plist")
-        loadCallSessions()
+
+    private init() {}
+
+    // Only one active session at a time
+    private(set) var activeSession: CallSession?
+
+
+    func startSession(_ session: CallSession) {
+        activeSession = session
     }
-    
-    /*
-        Find a match for the current user, based on the interests, gender and english level
-        Parameters: CallSession object for interets, gender and english level
-        Return:
-            Returns UUID of matched peer, nil in case of no match found
-    */
-    func findMatch(callSession: CallSession) -> UUID? {
-        // get all online users near the current user
-        // filter users based on these 3 things
-        // return user id if found, otherwise nil
+
+    func endSession() {
+        guard let session = activeSession else { return }
+
+        // Mark end time
+        var finished = session
+        finished.endedAt = Date()
+
+
+        if let start = session.startedAt as Date?,
+           let end = finished.endedAt {
+
+            let duration = Int(end.timeIntervalSince(start))
+
+            HistoryDataModel.shared.logActivity(
+                type: .call,
+                title: "Call Session",
+                topic: "Conversation",
+                duration: duration,
+                imageURL: "call_icon",
+                xpEarned: 8,
+                isCompleted: true
+            )
+        }
+
+        activeSession = nil
+    }
+
+    func getActiveSession() -> CallSession? {
+        return activeSession
+    }
+
+    func getMatches(interests: [Interest], gender: Gender, englishLevel: EnglishLevel) -> [UUID]? {
+        // call backend to get the match based on interest
         return nil
     }
-    
-    
-    func getParticipantDetails(participantID: UUID){
-            // get participant bio
-            // get participant name
-            // get participant image
-            // get shared interests
-    }
-    
-    func getCallSession(by id: UUID) -> CallSession? {
-        return callSessions.first(where: { $0.id == id })
+
+
+
+    func getParticipantDetails(from user: User) -> (
+        name: String,
+        bio: String?,
+        image: String?,
+        sharedInterests: [Interest]
+    ) {
+
+        guard let currentUser = UserDataModel.shared.getCurrentUser() else {
+            return (user.name, user.bio, user.avatar, user.interests ?? [])
+        }
+
+        let shared = Set(currentUser.interests ?? [])
+            .intersection(Set(user.interests ?? []))
+
+        return (
+            name: user.name,
+            bio: user.bio,
+            image: user.avatar,
+            sharedInterests: Array(shared)
+        )
     }
 
-    
-    func addSuggestedQuestions(to sessionID: UUID, questions: [String]) {
-        if let index = callSessions.firstIndex(where: { $0.id == sessionID }) {
-            callSessions[index].suggestedQuestions = questions
-            saveCallSessions()
-        }
-    }
-    
 
-    
-    private func loadCallSessions() {
-        if let savedCallSessions = loadCallSessionsFromDisk() {
-            callSessions = savedCallSessions
-        } else {
-            callSessions = loadSampleCallSessions()
+    func generateSuggestedQuestions(from interests: [Interest]?) -> [String] {
+
+        guard let interests: [Interest] = interests, !interests.isEmpty else {
+            return [
+                "What did you do today?",
+                "What are your hobbies?",
+                "What's something you want to improve?",
+            ]
         }
-    }
-    
-    private func loadCallSessionsFromDisk() -> [CallSession]? {
-        guard let codedCallSessions = try? Data(contentsOf: archiveURL) else { return nil }
-        let propertyListDecoder = PropertyListDecoder()
-        return try? propertyListDecoder.decode([CallSession].self, from: codedCallSessions)
-    }
-    
-    private func saveCallSessions() {
-        let propertyListEncoder = PropertyListEncoder()
-        let codedCallSessions = try? propertyListEncoder.encode(callSessions)
-        try? codedCallSessions?.write(to: archiveURL)
-    }
-    
-    private func loadSampleCallSessions() -> [CallSession] {
-        // Return empty array as sample - call sessions require actual user data
-        return []
+
+        var questions: [String] = []
+
+        for interest: Interest in interests {
+
+            switch interest.rawValue.lowercased() {
+
+            case "music":
+                questions += [
+                    "What kind of music do you enjoy?",
+                    "Do you play any instruments?"
+                ]
+
+            case "sports":
+                questions += [
+                    "Which sport do you follow?",
+                    "Do you support any teams?"
+                ]
+
+            case "coding":
+                questions += [
+                    "What language do you enjoy coding in?",
+                    "What project are you working on?"
+                ]
+
+            case "travel":
+                questions += [
+                    "What was your favourite trip?",
+                    "Where do you want to go next?"
+                ]
+
+            case "reading":
+                questions += [
+                    "What book impacted you the most?",
+                    "What genres do you like reading?"
+                ]
+
+            default:
+                questions += [
+                    "How did you get into \(interest.rawValue)?",
+                    "What do you enjoy about \(interest.rawValue)?"
+                ]
+            }
+        }
+
+        return questions
     }
 }
-

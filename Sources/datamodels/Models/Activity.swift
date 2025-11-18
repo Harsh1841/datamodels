@@ -3,13 +3,23 @@ import Foundation
 struct Activity: Equatable, Codable {
     let id: UUID
     let type: ActivityType
+    let title: String
     let date: Date
+    let topic : String
+    let duration: Int
     let imageURL: String
-    init( type: ActivityType, date: Date) {
+    let xpEarned: Int
+    let isCompleted: Bool
+    init( type: ActivityType, date: Date, topic: String, duration: Int, xpEarned: Int, isCompleted: Bool = false, title: String, imageURL: String) {
         self.id = UUID()
         self.type = type
         self.date = date
-        self.imageURL = type.rawValue
+        self.imageURL = imageURL
+        self.topic = topic
+        self.duration = duration
+        self.xpEarned = xpEarned
+        self.isCompleted = isCompleted
+        self.title = type.rawValue
     }
     
     static func ==(lhs: Activity, rhs: Activity) -> Bool {
