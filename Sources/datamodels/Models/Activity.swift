@@ -10,7 +10,9 @@ struct Activity: Equatable, Codable {
     let imageURL: String
     let xpEarned: Int
     let isCompleted: Bool
-    init( type: ActivityType, date: Date, topic: String, duration: Int, xpEarned: Int, isCompleted: Bool = false, title: String, imageURL: String) {
+    let roleplaySession: RoleplaySession?
+    let feedback: SessionFeedback? 
+    init( type: ActivityType, date: Date, topic: String, duration: Int, xpEarned: Int, isCompleted: Bool = false, title: String, imageURL: String, roleplaySession: RoleplaySession? = nil, feedback: SessionFeedback? = nil) {
         self.id = UUID()
         self.type = type
         self.date = date
@@ -20,6 +22,8 @@ struct Activity: Equatable, Codable {
         self.xpEarned = xpEarned
         self.isCompleted = isCompleted
         self.title = type.rawValue
+        self.roleplaySession = roleplaySession
+        self.feedback = feedback
     }
     
     static func ==(lhs: Activity, rhs: Activity) -> Bool {

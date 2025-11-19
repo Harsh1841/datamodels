@@ -9,6 +9,7 @@ struct User: Identifiable, Codable, Equatable {
     var age: Int?
     var gender: Gender?
     var bio: String?
+    var goal: Int
     var englishLevel: EnglishLevel?
     var interests: [Interest]?
     var currentPlan: UserPlan?
@@ -35,6 +36,7 @@ struct User: Identifiable, Codable, Equatable {
         roleplayIDs: [UUID] = [],
         jamSessionIDs: [UUID] = [],
         friends: [UUID] = [],
+        goal: Int = 0
     ) {
         self.id = UUID()
         self.name = name
@@ -52,6 +54,7 @@ struct User: Identifiable, Codable, Equatable {
         self.roleplayIDs = roleplayIDs
         self.jamSessionIDs = jamSessionIDs
         self.friendsIDs = friends
+        self.goal = goal
     }
 
     static func == (lhs: User, rhs: User) -> Bool {

@@ -5,66 +5,74 @@ class RoleplaySessionDataModel {
 
     static let shared = RoleplaySessionDataModel()
 
-    private let documentsDirectory = FileManager.default.urls(
-        for: .documentDirectory,
-        in: .userDomainMask
-    ).first!
+    private init() {}
 
-    private let archiveURL: URL
+    private(set) var activeSession: RoleplaySession?
 
-    private var sessions: [RoleplaySession] = []
 
-    private init() {
-        archiveURL =
-            documentsDirectory
-            .appendingPathComponent("roleplaySessions")
-            .appendingPathExtension("plist")
+    /// Starts a new roleplay session and assigns it as the active one.
+    func startSession(scenarioId: UUID) -> RoleplaySession? {
 
-        loadSessions()
+        guard let user = UserDataModel.shared.getCurrentUser() else {
+            return nil
+        }
+
+        let newSession = RoleplaySession(
+            userId: user.id,
+            scenarioId: scenarioId
+        )
+
+        activeSession = newSession
+
+        // Update user's roleplay list
+        UserDataModel.shared.addRoleplayID(newSession.id)
+
+        return newSession
     }
 
-    func getAllSessions() -> [RoleplaySession] {
-        sessions
+    /// Returns the currently active session (if any)
+    func getActiveSession() -> RoleplaySession? {
+        return activeSession
     }
 
-    func getSessions(for userId: UUID) -> [RoleplaySession] {
-        sessions.filter { $0.userId == userId }
-    }
+    /// Updates the active roleplay session (messages, status, etc.)
+    /// If session moves to `.completed`, history is logged automatically.
+    func updateSession(_ updated: RoleplaySession, scenario: RoleplayScenario) {
+        guard let current = activeSession,
+              current.id == updated.id else {
+            return
+        }
 
-    func addSession(_ session: RoleplaySession) {
-        sessions.append(session)
-        saveSessions()
-    }
+        activeSession = updated
 
-    func updateSession(_ session: RoleplaySession) {
-        if let index: Array<RoleplaySession>.Index = sessions.firstIndex(where: { $0.id == session.id }) {
-            sessions[index] = session
-            saveSessions()
+        // Log only when the session transitions to completed
+        if current.status != .completed && updated.status == .completed {
+
+            let duration: Int
+            if let end = updated.endedAt {
+                duration = Int(end.timeIntervalSince(updated.startedAt))
+            } else {
+                duration = 0
+            }
+
+            // Log roleplay activity
+            HistoryDataModel.shared.logActivity(
+                type: .roleplay,
+                title: scenario.title,
+                topic: scenario.description,
+                duration: duration,
+                imageURL: scenario.imageURL,
+                xpEarned: 12,
+                isCompleted: true
+            )
+
+            // Clear the active session
+            activeSession = nil
         }
     }
 
-    func deleteSession(by id: UUID) {
-        sessions.removeAll { $0.id == id }
-        saveSessions()
-    }
-
-    func getSession(by id: UUID) -> RoleplaySession? {
-        sessions.first { $0.id == id }
-    }
-
-    private func loadSessions() {
-        if let data: Data = try? Data(contentsOf: archiveURL) {
-            let decoder: PropertyListDecoder = PropertyListDecoder()
-            sessions = (try? decoder.decode([RoleplaySession].self, from: data)) ?? []
-        } else {
-            sessions = []
-        }
-    }
-
-    private func saveSessions() {
-        let encoder: PropertyListEncoder = PropertyListEncoder()
-        if let data: Data = try? encoder.encode(sessions) {
-            try? data.write(to: archiveURL)
-        }
+    /// Cancels the current session without logging.
+    func cancelSession() {
+        activeSession = nil
     }
 }

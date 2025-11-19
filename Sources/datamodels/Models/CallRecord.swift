@@ -10,7 +10,6 @@ struct CallRecord: Identifiable, Codable {
     let callDate: Date
     let duration: TimeInterval
     let userStatus: UserStatus
-
     init(
         participantID: UUID,
         participantName: String?,

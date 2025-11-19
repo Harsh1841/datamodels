@@ -14,12 +14,14 @@ struct RoleplaySession: Identifiable, Codable, Equatable {
     let startedAt: Date
     var endedAt: Date?
     var feedback: SessionFeedback?
+    var xpEarned: Int
 
     init(
         userId: UUID,
         scenarioId: UUID,
         status: RoleplayStatus = .notStarted,
-        startedAt: Date = Date()
+        startedAt: Date = Date(),
+        xpEarned: Int = 100
     ) {
         self.id = UUID()
         self.userId = userId
@@ -30,6 +32,7 @@ struct RoleplaySession: Identifiable, Codable, Equatable {
         self.feedback = nil
         self.currentLineIndex = 0
         self.messages = []
+        self.xpEarned = xpEarned
     }
 
     static func == (lhs: RoleplaySession, rhs: RoleplaySession) -> Bool {
